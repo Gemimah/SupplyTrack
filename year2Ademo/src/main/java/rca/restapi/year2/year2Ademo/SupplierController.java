@@ -1,8 +1,8 @@
 package rca.restapi.year2.year2Ademo;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,8 +28,8 @@ public class SupplierController {
 
     @PostMapping
     public ResponseEntity<Supplier> createSupplier(@RequestBody Supplier supplier) {
-        supplierService.createSupplier(supplier);
-        return ResponseEntity.ok(supplier);
+        Supplier savedSupplier = supplierService.createSupplier(supplier);
+        return ResponseEntity.ok(savedSupplier);
     }
 
     @PutMapping("/{id}")
@@ -37,8 +37,8 @@ public class SupplierController {
         Optional<Supplier> existingSupplier = supplierService.getSupplier(id);
         if (existingSupplier.isPresent()) {
             supplier.setId(id);
-            supplierService.createSupplier(supplier);
-            return ResponseEntity.ok(supplier);
+            Supplier updatedSupplier = supplierService.createSupplier(supplier);
+            return ResponseEntity.ok(updatedSupplier);
         }
         return ResponseEntity.notFound().build();
     }
@@ -51,5 +51,12 @@ public class SupplierController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    // Endpoint to find suppliers by age
+    @GetMapping("/age/{age}")
+    public ResponseEntity<List<Supplier>> findSuppliersByAge(@PathVariable Integer age) {
+        List<Supplier> suppliers = supplierService.findSuppliersByAge(age);
+        return ResponseEntity.ok(suppliers);
     }
 }
